@@ -18,6 +18,7 @@ import (
 
 	"github.com/magiconair/properties"
 	"github.com/pingcap/go-ycsb/pkg/ycsb"
+	"github.com/pingcap/kvproto/pkg/kvrpcpb"
 	"github.com/tikv/client-go/v2/config"
 )
 
@@ -41,7 +42,9 @@ func (c tikvCreator) Create(p *properties.Properties) (ycsb.DB, error) {
 	tp := p.GetString(tikvType, "raw")
 	switch tp {
 	case "raw":
-		return createRawDB(p)
+		return createRawDB(p, kvrpcpb.APIVersion_V1)
+	case "raw_v2":
+		return createRawDB(p, kvrpcpb.APIVersion_V2)
 	case "txn":
 		return createTxnDB(p)
 	default:

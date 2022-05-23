@@ -33,12 +33,12 @@ require (
 	github.com/mattn/go-sqlite3 v2.0.1+incompatible
 	github.com/minio/minio-go v6.0.14+incompatible
 	github.com/pingcap/errors v0.11.5-0.20211224045212-9687c2b0f87c
+	github.com/pingcap/kvproto v0.0.0-20220517085838-12e2f5a9d167
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
 	github.com/spf13/cobra v1.0.0
 	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/tikv/client-go/v2 v2.0.0-rc.0.20220222033436-79b962a84d18
-	github.com/tikv/pd/client v0.0.0-20220222032342-97a35a18158c // indirect
 	github.com/yuin/gopher-lua v0.0.0-20181031023651-12c4817b42c5 // indirect
 	go.mongodb.org/mongo-driver v1.5.1
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
@@ -49,6 +49,9 @@ require (
 	gopkg.in/tomb.v2 v2.0.0-20161208151619-d5d1b5820637 // indirect
 )
 
-replace github.com/apache/thrift => github.com/apache/thrift v0.0.0-20171203172758-327ebb6c2b6d
+replace (
+	github.com/apache/thrift => github.com/apache/thrift v0.0.0-20171203172758-327ebb6c2b6d
+	github.com/tikv/client-go/v2 => github.com/pingyu/client-go/v2 v2.0.0-alpha.0.20220520034047-930ceb902e26
+)
 
 go 1.13

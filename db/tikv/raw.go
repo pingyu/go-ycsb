@@ -22,6 +22,7 @@ import (
 	"github.com/magiconair/properties"
 	"github.com/pingcap/go-ycsb/pkg/util"
 	"github.com/pingcap/go-ycsb/pkg/ycsb"
+	"github.com/pingcap/kvproto/pkg/kvrpcpb"
 	"github.com/tikv/client-go/v2/config"
 	"github.com/tikv/client-go/v2/rawkv"
 )
@@ -32,9 +33,18 @@ type rawDB struct {
 	bufPool *util.BufPool
 }
 
-func createRawDB(p *properties.Properties) (ycsb.DB, error) {
+func createRawDB(p *properties.Properties, apiVersion kvrpcpb.APIVersion) (ycsb.DB, error) {
 	pdAddr := p.GetString(tikvPD, "127.0.0.1:2379")
-	db, err := rawkv.NewClient(context.Background(), strings.Split(pdAddr, ","), config.Security{})
+
+	var db *rawkv.Client
+	var err error
+	if apiVersion == kvrpcpb.APIVersion_V1 {
+		db, err = rawkv.NewClient(context.Background(), strings.Split(pdAddr, ","), config.Security{})
+	} else if apiVersion == kvrpcpb.APIVersion_V2 {
+		db, err = rawkv.NewClientV2(context.Background(), strings.Split(pdAddr, ","), config.Security{})
+	} else {
+		return nil, fmt.Errorf("unsupported api version %v", apiVersion)
+	}
 	if err != nil {
 		return nil, err
 	}
