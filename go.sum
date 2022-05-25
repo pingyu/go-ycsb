@@ -418,8 +418,8 @@ github.com/pingcap/kvproto v0.0.0-20220517085838-12e2f5a9d167/go.mod h1:OYtxs078
 github.com/pingcap/log v0.0.0-20191012051959-b742a5d432e9/go.mod h1:4rbK1p9ILyIfb6hU7OG2CiWSqMXnp3JMbiaVJ6mvoY8=
 github.com/pingcap/log v0.0.0-20211215031037-e024ba4eb0ee h1:VO2t6IBpfvW34TdtD/G10VvnGqjLic1jzOuHjUb5VqM=
 github.com/pingcap/log v0.0.0-20211215031037-e024ba4eb0ee/go.mod h1:DWQW5jICDR7UJh4HtxXSM20Churx4CQL0fwL/SoOSA4=
-github.com/pingyu/client-go/v2 v2.0.0-alpha.0.20220520034047-930ceb902e26 h1:XvT3yQzDnLOcnG+LDrhlUHcFVVvogrTSvgMcwjecFU0=
-github.com/pingyu/client-go/v2 v2.0.0-alpha.0.20220520034047-930ceb902e26/go.mod h1:VTlli8fRRpcpISj9I2IqroQmcAFfaTyBquiRhofOcDs=
+github.com/pingyu/client-go/v2 v2.0.0-alpha.0.20220524115909-ef4e8d64caa6 h1:BOMOWJc+UQiED/8eogfuf/gcDa3Ndci95D8olnJs09c=
+github.com/pingyu/client-go/v2 v2.0.0-alpha.0.20220524115909-ef4e8d64caa6/go.mod h1:VTlli8fRRpcpISj9I2IqroQmcAFfaTyBquiRhofOcDs=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=

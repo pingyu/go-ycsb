@@ -51,7 +51,7 @@ require (
 
 replace (
 	github.com/apache/thrift => github.com/apache/thrift v0.0.0-20171203172758-327ebb6c2b6d
-	github.com/tikv/client-go/v2 => github.com/pingyu/client-go/v2 v2.0.0-alpha.0.20220520034047-930ceb902e26
+	github.com/tikv/client-go/v2 => github.com/pingyu/client-go/v2 v2.0.0-alpha.0.20220524115909-ef4e8d64caa6
 )
 
 go 1.13

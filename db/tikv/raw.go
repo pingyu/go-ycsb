@@ -31,9 +31,10 @@ type rawDB struct {
 	db      *rawkv.Client
 	r       *util.RowCodec
 	bufPool *util.BufPool
+	atomic  bool
 }
 
-func createRawDB(p *properties.Properties, apiVersion kvrpcpb.APIVersion) (ycsb.DB, error) {
+func createRawDB(p *properties.Properties, apiVersion kvrpcpb.APIVersion, atomic bool) (ycsb.DB, error) {
 	pdAddr := p.GetString(tikvPD, "127.0.0.1:2379")
 
 	var db *rawkv.Client
@@ -50,11 +51,13 @@ func createRawDB(p *properties.Properties, apiVersion kvrpcpb.APIVersion) (ycsb.
 	}
 
 	bufPool := util.NewBufPool()
+	db.SetAtomicForCAS(atomic)
 
 	return &rawDB{
 		db:      db,
 		r:       util.NewRowCodec(p),
 		bufPool: bufPool,
+		atomic:  atomic,
 	}, nil
 }
 
@@ -178,6 +181,10 @@ func (db *rawDB) Insert(ctx context.Context, table string, key string, values ma
 		return err
 	}
 
+	if db.atomic {
+		_, _, err = db.db.CompareAndSwap(ctx, db.getRowKey(table, key), nil, buf)
+		return err
+	}
 	return db.db.Put(ctx, db.getRowKey(table, key), buf)
 }
 

@@ -28,6 +28,7 @@ const (
 	tikvType      = "tikv.type"
 	tikvConnCount = "tikv.conncount"
 	tikvBatchSize = "tikv.batchsize"
+	tikvAtomic    = "tikv.atomic"
 )
 
 type tikvCreator struct {
@@ -39,12 +40,14 @@ func (c tikvCreator) Create(p *properties.Properties) (ycsb.DB, error) {
 		c.TiKVClient.MaxBatchSize = p.GetUint(tikvBatchSize, 128)
 	})
 
+	atomic := p.GetBool(tikvAtomic, false)
+
 	tp := p.GetString(tikvType, "raw")
 	switch tp {
 	case "raw":
-		return createRawDB(p, kvrpcpb.APIVersion_V1)
+		return createRawDB(p, kvrpcpb.APIVersion_V1, atomic)
 	case "raw_v2":
-		return createRawDB(p, kvrpcpb.APIVersion_V2)
+		return createRawDB(p, kvrpcpb.APIVersion_V2, atomic)
 	case "txn":
 		return createTxnDB(p)
 	default:
