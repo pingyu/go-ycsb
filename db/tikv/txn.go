@@ -121,10 +121,20 @@ func (db *txnDB) BatchRead(ctx context.Context, table string, keys []string, fie
 	}
 	defer tx.Rollback()
 
-	rowValues := make([]map[string][]byte, len(keys))
+	rowKeys := make([][]byte, len(keys))
 	for i, key := range keys {
-		value, err := tx.Get(ctx, db.getRowKey(table, key))
-		if tikverr.IsErrNotFound(err) || value == nil {
+		rowKeys[i] = db.getRowKey(table, key)
+	}
+
+	values, err := tx.BatchGet(ctx, rowKeys)
+	if err != nil {
+		return nil, err
+	}
+
+	rowValues := make([]map[string][]byte, len(keys))
+	for i, key := range rowKeys {
+		value, ok := values[util.String(key)]
+		if !ok || value == nil {
 			rowValues[i] = nil
 		} else {
 			rowValues[i], err = db.r.Decode(value, fields)
