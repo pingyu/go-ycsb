@@ -50,7 +50,7 @@ func createRawDB(p *properties.Properties) (ycsb.DB, error) {
 		db  RawKVClient
 		err error
 	)
-	if p.GetBool(tikvWithRetry, false) {
+	if p.GetBool(tikvWithRetry, true) {
 		db, err = NewRawKVClientWithRetry(context.Background(), strings.Split(pdAddr, ","),
 			true, flagClientRetryCnt, flagClientRetryInterval,
 			rawkv.WithAPIVersion(kvrpcpb.APIVersion(apiVersion)))
