@@ -28,6 +28,8 @@ const (
 	tikvConnCount  = "tikv.conncount"
 	tikvBatchSize  = "tikv.batchsize"
 	tikvAPIVersion = "tikv.apiversion"
+
+	tikvWithRetry = "tikv.withretry"
 )
 
 type tikvCreator struct {

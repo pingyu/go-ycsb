@@ -17,6 +17,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/magiconair/properties"
 	"github.com/pingcap/errors"
@@ -27,10 +28,15 @@ import (
 )
 
 type rawDB struct {
-	db      *rawkv.Client
+	db      RawKVClient
 	r       *util.RowCodec
 	bufPool *util.BufPool
 }
+
+const (
+	flagClientRetryCnt      int           = 50
+	flagClientRetryInterval time.Duration = 100 * time.Millisecond
+)
 
 func createRawDB(p *properties.Properties) (ycsb.DB, error) {
 	pdAddr := p.GetString(tikvPD, "127.0.0.1:2379")
@@ -39,8 +45,19 @@ func createRawDB(p *properties.Properties) (ycsb.DB, error) {
 	if !ok {
 		return nil, errors.Errorf("Invalid tikv apiversion %s.", apiVersionStr)
 	}
-	db, err := rawkv.NewClientWithOpts(context.Background(), strings.Split(pdAddr, ","),
-		rawkv.WithAPIVersion(kvrpcpb.APIVersion(apiVersion)))
+
+	var (
+		db  RawKVClient
+		err error
+	)
+	if p.GetBool(tikvWithRetry, false) {
+		db, err = NewRawKVClientWithRetry(context.Background(), strings.Split(pdAddr, ","),
+			true, flagClientRetryCnt, flagClientRetryInterval,
+			rawkv.WithAPIVersion(kvrpcpb.APIVersion(apiVersion)))
+	} else {
+		db, err = rawkv.NewClientWithOpts(context.Background(), strings.Split(pdAddr, ","),
+			rawkv.WithAPIVersion(kvrpcpb.APIVersion(apiVersion)))
+	}
 	if err != nil {
 		return nil, err
 	}
