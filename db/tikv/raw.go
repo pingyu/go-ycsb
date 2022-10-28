@@ -34,7 +34,7 @@ type rawDB struct {
 }
 
 const (
-	flagClientRetryCnt      int           = 50
+	flagClientRetryCnt      int           = 0 // Don't retry. Just rebuild client & propagate error
 	flagClientRetryInterval time.Duration = 100 * time.Millisecond
 )
 

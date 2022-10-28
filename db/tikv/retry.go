@@ -130,15 +130,17 @@ func (c *ClientWithRetry) withRetry(ctx context.Context, f func(*rawkv.Client) e
 	for {
 		{
 			cli := c.pool.Get()
-			defer func() {
+			putBack := func() {
 				if cli != nil && cli.Err == nil {
 					c.pool.Put(cli)
 				}
-			}()
+				cli = nil
+			}
 
 			e := cli.Err
 			if e == nil {
 				if e = f(cli.Inner); e == nil {
+					putBack()
 					return nil
 				} else if c.rebuildOnError {
 					cli.Inner.Close()
@@ -148,6 +150,7 @@ func (c *ClientWithRetry) withRetry(ctx context.Context, f func(*rawkv.Client) e
 			err = multierr.Append(err, errors.Trace(e))
 			log.Warn("ClientWithRetry.withRetry error", zap.Int("retryCnt", i), zap.Error(err))
 
+			putBack()
 			if i >= c.retryCnt {
 				return err
 			}
