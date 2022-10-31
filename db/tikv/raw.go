@@ -36,7 +36,7 @@ type rawDB struct {
 const (
 	flagRebuildOnError      bool          = true
 	flagClientRetryCnt      int           = 0 // Don't retry. Just rebuild client & propagate error
-	flagClientRetryInterval time.Duration = 100 * time.Millisecond
+	flagClientRetryInterval time.Duration = 3 * time.Second
 )
 
 func createRawDB(p *properties.Properties) (ycsb.DB, error) {
@@ -52,6 +52,7 @@ func createRawDB(p *properties.Properties) (ycsb.DB, error) {
 		err error
 	)
 	if p.GetBool(tikvWithRetry, true) {
+		rawkv.SetRawKVMaxBackoff(int(flagClientRetryInterval.Milliseconds()))
 		db, err = NewRawKVClientWithRetry(context.Background(), strings.Split(pdAddr, ","),
 			flagRebuildOnError, flagClientRetryCnt, flagClientRetryInterval,
 			rawkv.WithAPIVersion(kvrpcpb.APIVersion(apiVersion)))
